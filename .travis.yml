@@ -1,2 +1,2 @@
-git:
-  depth: false
+dist: focal
+language: minimal
