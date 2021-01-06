@@ -1,12 +1,34 @@
-dist: bionic
+
+dist: xenial
+sudo: false
+
 language: python
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
-  - "3.6"     
+  - "3.6"
   - "3.7"
+  - "pypy2.7-6.0"
+  - "pypy3.5"
+
+env:
+  - CASS_DRIVER_NO_CYTHON=1
+
+addons:
+  apt:
+    packages:
+    - build-essential
+    - python-dev
+    - pypy-dev
+    - libc-ares-dev
+    - libev4
+    - libev-dev
+
 install:
-  - pip install -r requirements.txt
+  - pip install tox-travis
+  - if [[ $TRAVIS_PYTHON_VERSION != pypy3.5 ]]; then pip install lz4; fi
+
 script:
-  - pytest
+  - tox
+  - tox -e gevent_loop
+  - tox -e eventlet_loop
